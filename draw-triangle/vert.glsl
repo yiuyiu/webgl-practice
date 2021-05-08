@@ -1,7 +1,7 @@
-attribute vec2 position;
-varying vec3 color;
-void main() {
-  gl_PointSize = 1.0;
-  color = vec3(0.5 + position * 0.5, 0.0);
-  gl_Position = vec4(position * 0.5, 1.0, 1.0);
+attribute vec4 a_xixi;
+attribute vec4 a_color;
+varying vec4 v_color;
+void main(){
+    gl_Position = a_xixi;
+    v_color = a_color;
 }
