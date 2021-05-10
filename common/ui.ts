@@ -192,10 +192,39 @@ function updateUI(widgets, data) {
         widget.updateValue(data[key]);
     });
 }
+function createInput(parent, options) {
+    const { name, value } = options;
+    parent.innerHTML = `
+        <div class="gman-widget-outer">
+          <div class="gman-widget-input-outer">
+            <div class="gman-widget-label">${name}</div>
+            <input class="gman-widget-input" value="${value}" />
+          </div>
+        </div>
+      `;
+    const eles = parent.querySelector('.gman-widget-input');
+    eles.addEventListener('input', (e)=>{
+        options.input(e, {
+            value: e.target.value
+        })
+    })
+}
+function setupInput(selector, options) {
+    var parent = document.querySelector(selector);
+    if (!parent) {
+        // like jquery don't fail on a bad selector
+        return;
+    }
+    if (!options.name) {
+        options.name = selector.substring(1);
+    }
+    return createInput(parent, options); // eslint-disable-line
+}
 export default {
     setupUI,
     updateUI,
     setupSlider,
     makeSlider,
+    setupInput,
     makeCheckbox
 };

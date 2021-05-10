@@ -30,10 +30,12 @@ function init() {
     0, 0, 0, 1,];
   let orthoMatrix = transform.orthographic(-2000, 2000, -2000, 2000, -2000, 2000);
   let rotationInRadians = [0, 0, 0];
-  let translation = [0, 0, 300];
-  let fieldOfViewInRadians = degToRad(60);
+  let translation = [0, 0, -500];
+  let camera = [0,0,800];
+  let fieldOfViewInRadians = degToRad(100);
   let zNear = 1;
   let zFar = 2000;
+  const target = [0, 0, 0];
   initUi();
   initData(gl, program);
   initData(gl2, program2);
@@ -55,13 +57,52 @@ function init() {
     ui.setupSlider('#angleZ', { slide: rotateZ, value: rotationInRadians[2], max: 360 });
     ui.setupSlider('#fieldOfView', { slide: updateFieldOfView, value: radToDeg(fieldOfViewInRadians), max: 180, min: 0 })
     ui.setupSlider('#zNear', { slide: updateZNear, value: zNear, max: 2000, min: 1 })
-    ui.setupSlider('#zFar', { slide: updateZFar, value: zFar, max: 5000, min: 1000 })
+    ui.setupSlider('#zFar', { slide: updateZFar, value: zFar, max: 5000, min: 1000 });
+    // ui.setupInput('#inputs', {
+    //   input: updateCamera,
+    //   name: "camera",
+    //   value: camera
+    // })
+    ui.setupSlider('#cameraX', {
+      slide: updateCamera(0),
+      value: camera[0],
+      min: 0,
+      max: 5000
+    });
+    ui.setupSlider('#cameraY', {
+      slide: updateCamera(1),
+      value: camera[1],
+      min: 0,
+      max: 5000
+      
+    });
+    ui.setupSlider('#cameraZ', {
+      slide: updateCamera(2),
+      value: camera[2],
+      min: 0,
+      max: 5000
+    })
   }
-  function updateZNear(event, ui){
+  function updateCamera(index){
+    return function(event, ui){
+      camera[index] = ui.value;
+      draw(gl, program);
+      draw(gl2, program2, true);
+    }
+  }
+  // function updateCamera(event, ui) {
+  //   const [x, y, z] = ui.value.split(',');
+  //   if (typeof +x === 'number' && typeof +y === 'number' && typeof +z === 'number') {
+  //     camera = ui.value;
+  //     draw(gl2, program2, true)
+  //     // draw(gl3, program3, true);
+  //   }
+  // }
+  function updateZNear(event, ui) {
     zNear = ui.value;
     draw(gl2, program2, true)
   }
-  function updateZFar(event, ui){
+  function updateZFar(event, ui) {
     zFar = ui.value;
     draw(gl2, program2, true)
   }
@@ -100,16 +141,17 @@ function init() {
     draw(gl2, program2, true);
 
   }
-  function draw(gl: WebGLRenderingContext, program: WebGLProgram, isDraw2?: boolean) {
+  function draw(gl: WebGLRenderingContext, program: WebGLProgram, isPerspective?: boolean) {
     gl.clearColor(0.92, 0.92, 0.92, 1);
     gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
-    gl.disable(gl.CULL_FACE); 
+    gl.disable(gl.CULL_FACE);
     const matrixLocation = gl.getUniformLocation(program, 'u_matrix');
-    let transformedMatrix;
-    if (isDraw2) {
-      transformedMatrix = transform.perspective(fieldOfViewInRadians, 1, zNear, zFar);
+    let transformedMatrix = transform.lookAt(camera, target, [0, 1, 0]);
+    transformedMatrix = transform.inverse(transformedMatrix);
+    if (isPerspective) {
+      transformedMatrix = transform.multiply(transform.perspective(fieldOfViewInRadians, 1, zNear, zFar), transformedMatrix);
     } else {
-      transformedMatrix = orthoMatrix;
+      transformedMatrix = transform.multiply(orthoMatrix, transformedMatrix);
     }
     transformedMatrix = transform.multiply(transformedMatrix, transform.translation(translation[0], translation[1], translation[2]));
     transformedMatrix = transform.multiply(transformedMatrix, transform.xRotation(rotationInRadians[0]));

@@ -13,6 +13,9 @@ declare module 'common' {
         setupSlider: (selector: string, {
 
         }) => {},
+        setupInput: (selector: string, {
+
+        }) => {},
         makeSlider: () => {},
         makeCheckbox: () => {}
     }
