@@ -3,18 +3,18 @@ import vertex from "./vertex.glsl";
 import vertexPerpective from "./vertexPerpective.glsl";
 import fragment from "./fragment.glsl";
 import { transform } from "../common";
-import { positions, colorsOfFaces } from "./data";
+import { cubeColors, cubePositions } from "../common/data";
 
 function initData(gl: WebGLRenderingContext, program: WebGLProgram) {
   const posBuffer = gl.createBuffer();
   gl.bindBuffer(gl.ARRAY_BUFFER, posBuffer);
-  gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(positions), gl.STATIC_DRAW);
+  gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(cubePositions), gl.STATIC_DRAW);
   const posLocation = gl.getAttribLocation(program, 'a_position');
   gl.enableVertexAttribArray(posLocation);
   gl.vertexAttribPointer(posLocation, 3, gl.FLOAT, false, 0, 0);
   const colorBuffer = gl.createBuffer();
   gl.bindBuffer(gl.ARRAY_BUFFER, colorBuffer);
-  gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(colorsOfFaces), gl.STATIC_DRAW);
+  gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(cubeColors), gl.STATIC_DRAW);
   const colorLocation = gl.getAttribLocation(program, 'a_color');
   gl.enableVertexAttribArray(colorLocation);
   gl.vertexAttribPointer(colorLocation, 3, gl.FLOAT, false, 0, 0);

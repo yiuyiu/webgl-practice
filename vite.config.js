@@ -15,7 +15,8 @@ export default {
             input: {
                 main: resolve(__dirname, 'index.html'),
                 drawTriangle: resolve(__dirname, 'draw-triangle/index.html'),
-                camera: resolve(__dirname, 'camera/index.html')
+                camera: resolve(__dirname, 'camera/index.html'),
+                light: resolve(__dirname, 'light/index.html')
             }
         }
     }

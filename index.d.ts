@@ -3,7 +3,7 @@ declare module '*.glsl' {
     export default content;
 }
 declare module 'common' {
-    const initWebGL: (vertex: any, fragment: any, canvasSelector ?: string) => {
+    const initWebGL: (vertex: any, fragment: any, canvasSelector?: string) => {
         gl: WebGLRenderingContext;
         program: WebGLProgram;
     }
@@ -20,9 +20,13 @@ declare module 'common' {
         makeCheckbox: () => {}
     }
     const transform: {
-        translation: (tx: number, ty: number, tz: number) => void,
+        translation: (tx: number, ty: number, tz: number) => number[],
         multiply: (m1: number[], m2: number[]) => number[],
+        inverse: (m1: number[]) => number[],
+        transpose: (m1: number[]) => number[],
         xRotation: (angleInRadians: number) => number[],
+        yRotation: (angleInRadians: number) => number[],
+        perspective: (fieldOfViewInRadians, aspect, near, far) => number[]
     }
     export {
         initWebGL, ui, transform
